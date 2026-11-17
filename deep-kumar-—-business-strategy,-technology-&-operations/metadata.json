@@ -1,0 +1,6 @@
+{
+  "name": "Deep Kumar — Business Strategy, Technology & Operations",
+  "description": "Personal editorial platform of Deep Kumar featuring independent business research, strategy articles, structured case studies, and StrategyDeck.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
