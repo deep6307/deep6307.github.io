@@ -12,6 +12,13 @@ import { DTalksSpread } from './components/spreads/DTalksSpread';
 import { ProjectsSpread } from './components/spreads/ProjectsSpread';
 import { ResumeSpread } from './components/spreads/ResumeSpread';
 
+function isInteractiveTouchTarget(target: EventTarget | null): boolean {
+  return (
+    target instanceof Element &&
+    target.closest('a, button, input, textarea, select, [role="button"], [data-no-swipe]') !== null
+  );
+}
+
 function parseLocation(): number {
   if (typeof window === 'undefined') {
     return 0;
@@ -162,9 +169,17 @@ export default function App() {
     [mobileMenuOpen, turnNext, turnPrev]
   );
 
-  // Mobile touch swipe navigation (down-to-up at bottom or right-to-left)
+  // Mobile touch swipe navigation. Interactive controls must retain their taps:
+  // otherwise a small finger movement can trigger a page turn before a link's click.
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (mobileMenuOpen || e.touches.length !== 1) return;
+    if (
+      mobileMenuOpen ||
+      e.touches.length !== 1 ||
+      isInteractiveTouchTarget(e.target)
+    ) {
+      touchStartRef.current = null;
+      return;
+    }
     touchStartRef.current = {
       x: e.touches[0].clientX,
       y: e.touches[0].clientY,
@@ -173,7 +188,14 @@ export default function App() {
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (mobileMenuOpen || !touchStartRef.current || e.changedTouches.length !== 1) return;
+    if (isInteractiveTouchTarget(e.target)) {
+      touchStartRef.current = null;
+      return;
+    }
+    if (mobileMenuOpen || !touchStartRef.current || e.changedTouches.length !== 1) {
+      touchStartRef.current = null;
+      return;
+    }
     const start = touchStartRef.current;
     touchStartRef.current = null;
 
