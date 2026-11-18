@@ -36,6 +36,19 @@ jobs:
         working-directory: deep-kumar-—-business-strategy,-technology-&-operations
         run: npm run build
 
+      - name: Verify SEO output
+        working-directory: deep-kumar-—-business-strategy,-technology-&-operations
+        run: |
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          test -f dist/index.html
+          for route in about projects d-talks resume; do
+            test -f "dist/$route/index.html"
+          done
+          grep -q 'https://deep6307.github.io/about/' dist/about/index.html
+          grep -q 'ProfilePage' dist/about/index.html
+          grep -q 'https://deep6307.github.io/sitemap.xml' dist/robots.txt
+
       - name: Upload website
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
