@@ -3,6 +3,8 @@ name: Deploy website to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -35,11 +37,13 @@ jobs:
         run: npm run build
 
       - name: Upload website
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: deep-kumar-—-business-strategy,-technology-&-operations/dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
