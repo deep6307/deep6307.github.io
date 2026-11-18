@@ -74,18 +74,18 @@ export default defineConfig(() => {
           const rootHtml = fs.readFileSync(indexPath, 'utf8');
 
           for (const page of routePages) {
-            const canonicalUrl = `https://deep6307.github.io${page.route}`;
+            const canonicalUrl = 'https://deep6307.github.io' + page.route;
             let html = rootHtml;
-            html = html.replace(/<title>[\\s\\S]*?<\\/title>/, `<title>${escapeHtml(page.title)}</title>`);
-            html = html.replace(/<meta\\s+name="description"[\\s\\S]*?\\/>/, `<meta name="description" content="${escapeHtml(page.description)}" />`);
-            html = html.replace(/<link\\s+rel="canonical"[^>]*\\/>/, `<link rel="canonical" href="${canonicalUrl}" />`);
-            html = html.replace(/<meta\\s+property="og:url"[^>]*\\/>/, `<meta property="og:url" content="${canonicalUrl}" />`);
-            html = html.replace(/<meta\\s+property="og:title"[^>]*\\/>/, `<meta property="og:title" content="${escapeHtml(page.title)}" />`);
-            html = html.replace(/<meta\\s+property="og:description"[\\s\\S]*?\\/>/, `<meta property="og:description" content="${escapeHtml(page.description)}" />`);
-            html = html.replace(/<meta\\s+name="twitter:title"[^>]*\\/>/, `<meta name="twitter:title" content="${escapeHtml(page.title)}" />`);
-            html = html.replace(/<meta\\s+name="twitter:description"[\\s\\S]*?\\/>/, `<meta name="twitter:description" content="${escapeHtml(page.description)}" />`);
+            html = html.replace(/<title>[\s\S]*?<\/title>/, '<title>' + escapeHtml(page.title) + '</title>');
+            html = html.replace(/<meta\s+name="description"[\s\S]*?\/>/, '<meta name="description" content="' + escapeHtml(page.description) + '" />');
+            html = html.replace(/<link\s+rel="canonical"[^>]*\/>/, '<link rel="canonical" href="' + canonicalUrl + '" />');
+            html = html.replace(/<meta\s+property="og:url"[^>]*\/>/, '<meta property="og:url" content="' + canonicalUrl + '" />');
+            html = html.replace(/<meta\s+property="og:title"[^>]*\/>/, '<meta property="og:title" content="' + escapeHtml(page.title) + '" />');
+            html = html.replace(/<meta\s+property="og:description"[\s\S]*?\/>/, '<meta property="og:description" content="' + escapeHtml(page.description) + '" />');
+            html = html.replace(/<meta\s+name="twitter:title"[^>]*\/>/, '<meta name="twitter:title" content="' + escapeHtml(page.title) + '" />');
+            html = html.replace(/<meta\s+name="twitter:description"[\s\S]*?\/>/, '<meta name="twitter:description" content="' + escapeHtml(page.description) + '" />');
 
-            const schemaMatch = html.match(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/);
+            const schemaMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
             if (schemaMatch) {
               const schema = JSON.parse(schemaMatch[1]);
               schema['@graph'] = (schema['@graph'] || []).filter((item: Record<string, unknown>) =>
@@ -93,7 +93,7 @@ export default defineConfig(() => {
               );
               schema['@graph'].push({
                 '@type': page.schemaType,
-                '@id': `${canonicalUrl}#page`,
+                '@id': canonicalUrl + '#page',
                 url: canonicalUrl,
                 name: page.name,
                 description: page.description,
@@ -103,10 +103,10 @@ export default defineConfig(() => {
                   ? { mainEntity: { '@id': 'https://deep6307.github.io/#person' } }
                   : {}),
               });
-              html = html.replace(schemaMatch[0], `<script type="application/ld+json">\\n${JSON.stringify(schema, null, 2)}\\n</script>`);
+              html = html.replace(schemaMatch[0], '<script type="application/ld+json">\n' + JSON.stringify(schema, null, 2) + '\n</script>');
             }
 
-            const outputDir = path.join(distDir, page.route.replace(/^\\/|\\/$/g, ''));
+            const outputDir = path.join(distDir, page.route.replace(/^\/|\/$/g, ''));
             fs.mkdirSync(outputDir, {recursive: true});
             fs.writeFileSync(path.join(outputDir, 'index.html'), html, 'utf8');
           }
