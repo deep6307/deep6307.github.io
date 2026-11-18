@@ -7,7 +7,7 @@ export const SITE_CONFIG = {
   email: 'dkr7836@gmail.com',
   phone: '+91 9874754022',
   linkedinUrl: 'https://www.linkedin.com/in/dkr7836/',
-  location: 'Delhi NCR, India',
+  location: 'Kolkata, India',
   assets: {
     heroPortraitUrl: '/assets/aistudio/07_010e4a85.JPG',
     headshotUrl: '/assets/aistudio/07_2414f2c2.jpeg',
@@ -44,7 +44,7 @@ export const MAGAZINE_SPREADS: SpreadMeta[] = [
     isDark: true,
     seoTitle: 'Deep Kumar — Business Strategy, Technology & Operations',
     seoDescription:
-      'Current MBA student at IMT Ghaziabad eager to solve business problems and discuss strategy, technology, and operations. Based in Delhi NCR, India.',
+      'Business professional based in Kolkata, India, exploring business strategy, technology and operations through independent research and structured problem-solving.',
   },
   {
     id: 'about',
@@ -56,7 +56,7 @@ export const MAGAZINE_SPREADS: SpreadMeta[] = [
     isDark: false,
     seoTitle: 'About Me — Deep Kumar',
     seoDescription:
-      'Current MBA student (PGDM ExP) at IMT Ghaziabad with experience across entrepreneurship, business analysis, product management, and procurement operations.',
+      'Learn about Deep Kumar, a business professional based in Kolkata, India, with experience in entrepreneurship, business analysis, product management and procurement operations. Incoming PGDM ExP candidate at IMT Ghaziabad.',
   },
   {
     id: 'projects',
@@ -68,7 +68,7 @@ export const MAGAZINE_SPREADS: SpreadMeta[] = [
     isDark: false,
     seoTitle: 'Projects & StrategyDeck — Deep Kumar',
     seoDescription:
-      'Explore StrategyDeck and applied initiatives by Deep Kumar.',
+      'Explore projects and independent initiatives by Deep Kumar across business analysis, product thinking, technology and operations.',
   },
   {
     id: 'd-talks',
@@ -80,7 +80,7 @@ export const MAGAZINE_SPREADS: SpreadMeta[] = [
     isDark: true,
     seoTitle: 'D-Talks — Deep Kumar',
     seoDescription:
-      'Business Research, Case Studies, and Articles — Coming Soon on D-Talks by Deep Kumar.',
+      'D-Talks by Deep Kumar — independent business research, case studies and articles on strategy, technology and operations. Publishing launch coming soon.',
   },
   {
     id: 'resume',
