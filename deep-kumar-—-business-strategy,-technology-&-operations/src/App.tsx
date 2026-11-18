@@ -23,7 +23,8 @@ function parseLocation(): number {
   if (typeof window === 'undefined') {
     return 0;
   }
-  const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+  const redirectedPath = new URLSearchParams(window.location.search).get('__page');
+  const pathname = (redirectedPath || window.location.pathname).replace(/\/+$/, '') || '/';
 
   if (pathname === '/') {
     return 0;
@@ -44,6 +45,14 @@ function updateMetaTag(selector: string, content: string) {
   if (el) el.setAttribute('content', content);
 }
 
+function updateCanonicalUrl(route: string) {
+  const canonicalPath = route === '/' ? '/' : `${route}/`;
+  const canonicalUrl = new URL(canonicalPath, window.location.origin).toString();
+  const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (canonicalLink) canonicalLink.href = canonicalUrl;
+  updateMetaTag('meta[property="og:url"]', canonicalUrl);
+}
+
 export default function App() {
   const [spreadIndex, setSpreadIndex] = useState<number>(() => parseLocation());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -55,6 +64,23 @@ export default function App() {
 
   const currentSpread = MAGAZINE_SPREADS[spreadIndex] || MAGAZINE_SPREADS[0];
   const activeRoute: PrimaryRoutePath = currentSpread.route;
+
+  // Restore a real page URL after GitHub Pages serves the lightweight route entry.
+  // The query parameter is only used during the initial redirect from /about/, /projects/, etc.
+  useEffect(() => {
+    const redirectedPath = new URLSearchParams(window.location.search).get('__page');
+    if (!redirectedPath) return;
+
+    const parsedUrl = new URL(redirectedPath, window.location.origin);
+    const cleanPath = parsedUrl.pathname.replace(/\/+$/, '') || '/';
+    const isKnownRoute =
+      cleanPath === '/' || MAGAZINE_SPREADS.some((spread) => spread.route === cleanPath);
+
+    if (isKnownRoute) {
+      const canonicalPath = cleanPath === '/' ? '/' : `${cleanPath}/`;
+      window.history.replaceState({}, '', `${canonicalPath}${parsedUrl.search}${parsedUrl.hash}`);
+    }
+  }, []);
 
   // Sync browser back/forward history
   useEffect(() => {
@@ -74,6 +100,7 @@ export default function App() {
     updateMetaTag('meta[property="og:description"]', currentSpread.seoDescription);
     updateMetaTag('meta[name="twitter:title"]', currentSpread.seoTitle);
     updateMetaTag('meta[name="twitter:description"]', currentSpread.seoDescription);
+    updateCanonicalUrl(currentSpread.route);
   }, [currentSpread]);
 
   const goToSpread = useCallback((targetIndex: number, pushHistory = true) => {
@@ -86,7 +113,8 @@ export default function App() {
     }
 
     if (pushHistory && typeof window !== 'undefined') {
-      const targetRoute = MAGAZINE_SPREADS[clamped].route;
+      const route = MAGAZINE_SPREADS[clamped].route;
+      const targetRoute = route === '/' ? '/' : `${route}/`;
       if (window.location.pathname !== targetRoute) {
         window.history.pushState({}, '', targetRoute);
       }
