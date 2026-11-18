@@ -85,6 +85,11 @@ export default defineConfig(() => {
             html = html.replace(/<meta\s+name="twitter:title"[^>]*\/>/, '<meta name="twitter:title" content="' + escapeHtml(page.title) + '" />');
             html = html.replace(/<meta\s+name="twitter:description"[\s\S]*?\/>/, '<meta name="twitter:description" content="' + escapeHtml(page.description) + '" />');
 
+            html = html.replace(
+              /<meta\s+name="robots"[^>]*\/>/,
+              '<meta name="robots" content="' + (page.route === '/d-talks/' ? 'noindex,follow' : 'index,follow') + '" />'
+            );
+
             const schemaMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
             if (schemaMatch) {
               const schema = JSON.parse(schemaMatch[1]);
