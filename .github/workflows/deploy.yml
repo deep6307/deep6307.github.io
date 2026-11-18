@@ -49,6 +49,9 @@ jobs:
           grep -q 'ProfilePage' dist/about/index.html
           grep -q 'https://deep6307.github.io/sitemap.xml' dist/robots.txt
 
+          grep -q 'noindex,follow' dist/d-talks/index.html
+          ! grep -q 'd-talks' dist/sitemap.xml
+
       - name: Upload website
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
