@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Allow ChatGPT Search indexing. This does not control model-training use.
+User-agent: OAI-SearchBot
+Allow: /
+
+# Keep search discovery separate from training crawler preferences.
+User-agent: GPTBot
+Allow: /
+
+Sitemap: https://deep6307.github.io/sitemap.xml
